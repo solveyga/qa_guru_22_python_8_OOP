@@ -3,16 +3,37 @@
 """
 import pytest
 
-from homework.models import Product
+from homework.models import Product, Cart
 
 
 @pytest.fixture
 def product():
     return Product("book", 100, "This is a book", 10)
 
+
 @pytest.fixture
 def magazine():
     return Product("magazine", 50, "This is a magazine", 20)
+
+
+@pytest.fixture
+def empty_cart():
+    return Cart()
+
+
+@pytest.fixture
+def cart_with_one_product(product):
+    cart = Cart()
+    cart.add_product(product, 3)
+    return cart
+
+
+@pytest.fixture
+def cart_with_two_products(product, magazine):
+    cart = Cart()
+    cart.add_product(product, 3)
+    cart.add_product(magazine, 5)
+    return cart
 
 
 class TestProducts:
@@ -31,7 +52,7 @@ class TestProducts:
         assert product.check_quantity(10)
 
     def test_product_check_quantity_is_greater_than(self, product):
-        """Тест проверяет ситуацию, когда запрашивается больше продуктов, чем есть на складе"""
+        """Тест проверяет ситуацию, когда запрашивается больше продуктов, чем есть на складе."""
         assert not product.check_quantity(11)
 
     def test_product_buy_part_of_products(self, product):
@@ -61,34 +82,57 @@ class TestCart:
         Например, негативные тесты, ожидающие ошибку (используйте pytest.raises, чтобы проверить это)
     """
 
-    def test_cart_add_product_first_item(self, product):
+    def test_cart_add_product_first_item(self, empty_cart, product):
         """Тест проверяет добавление первого продукта в пустую корзину"""
-        pass
+        empty_cart.add_product(product)
+        assert empty_cart.products[product] == 1
 
-    def test_cart_add_product_first_item_greater_than_limit(self, product):
-        """Тест проверяет добавление первого продукта в пустую корзину, количество продукта превышает его количество на складе"""
-        pass
+    def test_cart_add_product_first_item_less_than_limit(self, empty_cart, product):
+        """Тест проверяет добавление первого продукта в пустую корзину, количество продукта не превышает его количество на складе"""
+        empty_cart.add_product(product, 4)
+        assert empty_cart.products[product] == 4
 
-    def test_cart_add_product_second_item(self, product):
+    def test_cart_add_product_first_item_greater_than_limit(self, empty_cart, product):
+        """
+        Тест проверяет добавление первого продукта в пустую корзину, количество продукта превышает его количество на складе.
+        По требованиям должен быть ValueError на этапе покупки, поэтому здесь добавление не ограничено.
+        """
+        empty_cart.add_product(product, 14)
+        assert empty_cart.products[product] == 14
+
+    def test_cart_add_product_second_item(self, cart_with_one_product, magazine, product):
         """Тест проверяет добавление нового продукта в непустую корзину"""
-        pass
+        cart_with_one_product.add_product(magazine, 5)
+        assert cart_with_one_product.products[magazine] == 5
+        assert cart_with_one_product.products[product] == 3
 
-    def test_cart_add_product_additional_item_less_than_limit(self, product):
+    def test_cart_add_product_additional_item_less_than_limit(self, cart_with_one_product, product):
         """Тест проверяет добавление продукта в корзину, где уже есть продукт, общее количество меньше, чем на складе"""
-        pass
+        cart_with_one_product.add_product(product, 5)
+        assert cart_with_one_product.products[product] == 8
 
-    def test_cart_add_product_additional_item_equal_limit(self, product):
+    def test_cart_add_product_additional_item_equal_limit(self, cart_with_one_product, product):
         """Тест проверяет добавление продукта в корзину, где уже есть продукт, общее количество равно количеству на складе"""
-        pass
+        cart_with_one_product.add_product(product, 7)
+        assert cart_with_one_product.products[product] == 10
 
-    def test_cart_add_product_additional_item_greater_than_limit(self, product):
-        """Тест проверяет добавление продукта в корзину, где уже есть продукт, общее количество превышает количество на складе"""
-        # добавить обработку, в которой не будет ошибки, а будет добавлено то количество, которое есть на складе. И выведено сообщение
-        pass
+    def test_cart_add_product_additional_item_greater_than_limit(self, cart_with_one_product, product):
+        """
+        Тест проверяет добавление продукта в корзину, где уже есть продукт,
+        общее количество превышает количество на складе.
+        По требованиям должен быть ValueError на этапе покупки, поэтому здесь добавление не ограничено
+        """
+        cart_with_one_product.add_product(product, 11)
+        assert cart_with_one_product.products[product] == 14
 
-    def test_cart_add_product_second_item_greater_than_limit(self, product):
-        """Тест проверяет добавление продукта в непустую корзину, количество продукта превышает его количество на складе"""
-        pass
+    def test_cart_add_product_second_item_greater_than_limit(self, cart_with_one_product, magazine):
+        """
+        Тест проверяет добавление продукта в непустую корзину,
+        количество продукта превышает его количество на складе.
+        По требованиям должен быть ValueError на этапе покупки, поэтому здесь добавление не ограничено
+        """
+        cart_with_one_product.add_product(magazine, 21)
+        assert cart_with_one_product.products[magazine] == 21
 
     def test_cart_remove_product_one_item_less_than_quantity(self, product):
         """Тест проверяет удаление нескольких единиц продукта"""
@@ -188,4 +232,3 @@ class TestCart:
     def test_cart_buy_after_purchase(self, product):
         """Тест проверяет покупку, когда продукт был куплен, и его количество на складе уменьшилось"""
         pass
-
