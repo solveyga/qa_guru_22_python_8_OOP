@@ -138,37 +138,50 @@ class TestCart:
         """Тест проверяет удаление нескольких единиц продукта"""
         pass
 
-    def test_cart_remove_product_one_item_equal_quantity(self, product):
+    def test_cart_remove_product_one_item_equal_quantity(self, product, cart_with_one_product):
         """Тест проверяет удаление всех единиц продукта"""
-        pass
+        cart_with_one_product.remove_product(product, 1)
+        assert cart_with_one_product.products[product] == 2
 
-    def test_cart_remove_product_one_item_greater_than_quantity(self, product):
+    def test_cart_remove_product_one_item_greater_than_quantity(self, product, cart_with_one_product):
         """Тест проверяет удаление большего количества продукта, чем есть в корзине"""
-        pass
+        cart_with_one_product.remove_product(product, 5)
+        assert product not in cart_with_one_product.products
 
-    def test_cart_remove_product_one_item_empty_remove_count(self, product):
+    def test_cart_remove_product_one_item_empty_remove_count(self, product, cart_with_one_product):
         """Тест проверяет удаление продукта из корзины, когда не передано количество для удаления"""
-        pass
+        cart_with_one_product.remove_product(product)
+        assert product not in cart_with_one_product.products
 
-    def test_cart_remove_product_some_items_less_than_quantity(self, product):
+    def test_cart_remove_product_some_items_less_than_quantity(self, product, magazine, cart_with_two_products):
         """Тест проверяет удаление нескольких единиц продукта, когда в корзине несколько продуктов"""
-        pass
+        cart_with_two_products.remove_product(magazine, 3)
+        assert cart_with_two_products.products[magazine] == 2
+        assert cart_with_two_products.products[product] == 3
 
-    def test_cart_remove_product_some_items_equal_quantity(self, product):
+    def test_cart_remove_product_some_items_equal_quantity(self, product, magazine, cart_with_two_products):
         """Тест проверяет удаление всех единиц продукта, когда в корзине несколько продуктов"""
-        pass
+        cart_with_two_products.remove_product(magazine, 5)
+        assert magazine not in cart_with_two_products.products
+        assert cart_with_two_products.products[product] == 3
 
-    def test_cart_remove_product_some_items_greater_than_quantity(self, product):
+    def test_cart_remove_product_some_items_greater_than_quantity(self, product, magazine, cart_with_two_products):
         """Тест проверяет удаление большего количества продукта, чем есть в корзине, когда в корзине несколько продуктов"""
-        pass
+        cart_with_two_products.remove_product(magazine, 20)
+        assert magazine not in cart_with_two_products.products
+        assert cart_with_two_products.products[product] == 3
 
-    def test_cart_remove_product_some_items_empty_remove_count(self, product):
+    def test_cart_remove_product_some_items_empty_remove_count(self, product, magazine, cart_with_two_products):
         """Тест проверяет удаление продукта из корзины, когда не передано количество для удаления, когда в корзине несколько продуктов"""
-        pass
+        cart_with_two_products.remove_product(magazine)
+        assert magazine not in cart_with_two_products.products
+        assert cart_with_two_products.products[product] == 3
 
-    def test_cart_add_product_after_removing(self, product):
+    def test_cart_add_product_after_removing(self, product, cart_with_one_product):
         """Тест проверяет добавление продукта после его удаления из корзины"""
-        pass
+        cart_with_one_product.remove_product(product, 2)
+        cart_with_one_product.add_product(product, 3)
+        assert cart_with_one_product.products[product] == 4
 
     def test_cart_clear_one_item(self, product):
         """Тест проверяет очистку корзины с одним продуктом"""
