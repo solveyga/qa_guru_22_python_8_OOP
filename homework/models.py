@@ -26,7 +26,9 @@ class Product:
             Проверьте количество продукта используя метод check_quantity
             Если продуктов не хватает, то выбросите исключение ValueError
         """
-        raise NotImplementedError
+        if not self.check_quantity(quantity):
+            raise ValueError('Недостаточно продуктов для покупки.')
+        self.quantity -= quantity
 
     def __hash__(self):
         return hash(self.name + self.description)
