@@ -18,7 +18,7 @@ class Product:
         TODO Верните True если количество продукта больше или равно запрашиваемому
             и False в обратном случае
         """
-        raise NotImplementedError
+        return self.quantity >= quantity
 
     def buy(self, quantity):
         """
@@ -73,3 +73,9 @@ class Cart:
         В этом случае нужно выбросить исключение ValueError
         """
         raise NotImplementedError
+
+
+if __name__ == '__main__':
+    book = Product("book", 100, "This is a book", 10)
+    assert book.check_quantity(10)
+    assert not book.check_quantity(11)

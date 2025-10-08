@@ -8,7 +8,11 @@ from homework.models import Product
 
 @pytest.fixture
 def product():
-    return Product("book", 100, "This is a book", 1000)
+    return Product("book", 100, "This is a book", 10)
+
+@pytest.fixture
+def magazine():
+    return Product("magazine", 50, "This is a magazine", 20)
 
 
 class TestProducts:
@@ -20,17 +24,15 @@ class TestProducts:
     def test_product_check_quantity_is_less_than(self, product):
         # TODO напишите проверки на метод check_quantity
         """Тест проверяет ситуацию, когда запрашивается меньше продуктов, чем есть на складе"""
-        pass
+        assert product.check_quantity(5)
 
     def test_product_check_quantity_is_equal(self, product):
-        # TODO напишите проверки на метод check_quantity
         """Тест проверяет ситуацию, когда запрашивается столько же продуктов, сколько есть на складе"""
-        pass
+        assert product.check_quantity(10)
 
     def test_product_check_quantity_is_greater_than(self, product):
-        # TODO напишите проверки на метод check_quantity
         """Тест проверяет ситуацию, когда запрашивается больше продуктов, чем есть на складе"""
-        pass
+        assert not product.check_quantity(11)
 
     def test_product_buy_part_of_products(self, product):
         # TODO напишите проверки на метод buy
@@ -84,3 +86,103 @@ class TestCart:
     def test_cart_add_product_second_item_greater_than_limit(self, product):
         """Тест проверяет добавление продукта в непустую корзину, количество продукта превышает его количество на складе"""
         pass
+
+    def test_cart_remove_product_one_item_less_than_quantity(self, product):
+        """Тест проверяет удаление нескольких единиц продукта"""
+        pass
+
+    def test_cart_remove_product_one_item_equal_quantity(self, product):
+        """Тест проверяет удаление всех единиц продукта"""
+        pass
+
+    def test_cart_remove_product_one_item_greater_than_quantity(self, product):
+        """Тест проверяет удаление большего количества продукта, чем есть в корзине"""
+        pass
+
+    def test_cart_remove_product_one_item_empty_remove_count(self, product):
+        """Тест проверяет удаление продукта из корзины, когда не передано количество для удаления"""
+        pass
+
+    def test_cart_remove_product_some_items_less_than_quantity(self, product):
+        """Тест проверяет удаление нескольких единиц продукта, когда в корзине несколько продуктов"""
+        pass
+
+    def test_cart_remove_product_some_items_equal_quantity(self, product):
+        """Тест проверяет удаление всех единиц продукта, когда в корзине несколько продуктов"""
+        pass
+
+    def test_cart_remove_product_some_items_greater_than_quantity(self, product):
+        """Тест проверяет удаление большего количества продукта, чем есть в корзине, когда в корзине несколько продуктов"""
+        pass
+
+    def test_cart_remove_product_some_items_empty_remove_count(self, product):
+        """Тест проверяет удаление продукта из корзины, когда не передано количество для удаления, когда в корзине несколько продуктов"""
+        pass
+
+    def test_cart_add_product_after_removing(self, product):
+        """Тест проверяет добавление продукта после его удаления из корзины"""
+        pass
+
+    def test_cart_clear_one_item(self, product):
+        """Тест проверяет очистку корзины с одним продуктом"""
+        pass
+
+    def test_cart_clear_some_items(self, product):
+        """Тест проверяет очистку корзины с несколькими продуктами"""
+        pass
+
+    def test_cart_clear_empty_cart(self, product):
+        """Тест проверяет очистку пустой корзины"""
+        pass
+
+    def test_cart_get_total_price_one_item(self, product):
+        """Тест проверяет стоимость корзины с одним продуктом"""
+        pass
+
+    def test_cart_get_total_price_some_items(self, product):
+        """Тест проверяет стоимость корзины с несколькими продуктами"""
+        pass
+
+    def test_cart_get_total_price_empty_cart(self, product):
+        """Тест проверяет стоимость корзины без продуктов"""
+        pass
+
+    def test_cart_get_total_price_after_removing(self, product):
+        """Тест проверяет стоимость корзины, когда часть продуктов была удалена"""
+        pass
+
+    def test_cart_get_total_price_after_adding(self, product):
+        """Тест проверяет стоимость корзины, когда продукты были добавлены к уже добавленным"""
+        pass
+
+    def test_cart_buy_one_item(self, product):
+        """Тест проверяет покупку одного продукта"""
+        # не забыть проверить, что количество на складе уменьшилось
+        pass
+
+    def test_cart_buy_some_items(self, product):
+        """Тест проверяет покупку нескольких продуктов"""
+        pass
+
+    def test_cart_buy_after_adding(self, product):
+        """Тест проверяет покупку, когда продукт был добавлен, частично удален и еще раз добавлен"""
+        pass
+
+    def test_cart_buy_empty_cart(self, product):
+        """Тест проверяет покупку, когда корзина пустая"""
+        # ValueError?
+        pass
+
+    def test_cart_buy_one_item_excess_quantity(self, product):
+        """Тест проверяет покупку одного продукта в большем количестве, чем доступно"""
+        # не забыть проверить, что количество на складе уменьшилось
+        pass
+
+    def test_cart_buy_some_items_excess_quantity(self, product):
+        """Тест проверяет покупку нескольких продуктов в большем количестве, чем доступно"""
+        pass
+
+    def test_cart_buy_after_purchase(self, product):
+        """Тест проверяет покупку, когда продукт был куплен, и его количество на складе уменьшилось"""
+        pass
+
