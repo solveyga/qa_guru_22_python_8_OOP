@@ -2,6 +2,7 @@ class Product:
     """
     Класс продукта
     """
+
     name: str
     price: float
     description: str
@@ -27,7 +28,7 @@ class Product:
             Если продуктов не хватает, то выбросите исключение ValueError
         """
         if not self.check_quantity(quantity):
-            raise ValueError('Недостаточно продуктов для покупки.')
+            raise ValueError(f"Недостаточно {self.name} для покупки.")
         self.quantity -= quantity
 
     def __hash__(self):
@@ -72,8 +73,9 @@ class Cart:
         self.products.clear()
 
     def get_total_price(self) -> float:
-        total_price = sum([product.price * quantity
-                           for product, quantity in self.products.items()])
+        total_price = sum(
+            [product.price * quantity for product, quantity in self.products.items()]
+        )
         return total_price
 
     def buy(self):
@@ -82,5 +84,11 @@ class Cart:
         Учтите, что товаров может не хватать на складе.
         В этом случае нужно выбросить исключение ValueError
         """
-        raise NotImplementedError
+        for product, quantity in self.products.items():
+            if not product.check_quantity(quantity):
+                raise ValueError(f"Недостаточно {product.name} для покупки.")
 
+        for product, quantity in self.products.items():
+            product.buy(quantity)
+
+        self.clear()
