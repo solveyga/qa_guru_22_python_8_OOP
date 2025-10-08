@@ -183,17 +183,20 @@ class TestCart:
         cart_with_one_product.add_product(product, 3)
         assert cart_with_one_product.products[product] == 4
 
-    def test_cart_clear_one_item(self, product):
+    def test_cart_clear_one_item(self, cart_with_one_product):
         """Тест проверяет очистку корзины с одним продуктом"""
-        pass
+        cart_with_one_product.clear()
+        assert not cart_with_one_product.products
 
-    def test_cart_clear_some_items(self, product):
+    def test_cart_clear_some_items(self, cart_with_two_products):
         """Тест проверяет очистку корзины с несколькими продуктами"""
-        pass
+        cart_with_two_products.clear()
+        assert not cart_with_two_products.products
 
-    def test_cart_clear_empty_cart(self, product):
+    def test_cart_clear_empty_cart(self, empty_cart):
         """Тест проверяет очистку пустой корзины"""
-        pass
+        empty_cart.clear()
+        assert not empty_cart.products
 
     def test_cart_get_total_price_one_item(self, product):
         """Тест проверяет стоимость корзины с одним продуктом"""
