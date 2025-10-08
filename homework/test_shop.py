@@ -198,25 +198,32 @@ class TestCart:
         empty_cart.clear()
         assert not empty_cart.products
 
-    def test_cart_get_total_price_one_item(self, product):
+    def test_cart_get_total_price_one_item(self, cart_with_one_product, product):
         """Тест проверяет стоимость корзины с одним продуктом"""
-        pass
+        expected_price = product.price * cart_with_one_product.products[product]
+        assert cart_with_one_product.get_total_price() == expected_price
 
-    def test_cart_get_total_price_some_items(self, product):
+    def test_cart_get_total_price_some_items(self, cart_with_two_products, product, magazine):
         """Тест проверяет стоимость корзины с несколькими продуктами"""
-        pass
+        expected_price = (product.price * cart_with_two_products.products[product] +
+                          magazine.price * cart_with_two_products.products[magazine])
+        assert cart_with_two_products.get_total_price() == expected_price
 
-    def test_cart_get_total_price_empty_cart(self, product):
+    def test_cart_get_total_price_empty_cart(self, empty_cart):
         """Тест проверяет стоимость корзины без продуктов"""
-        pass
+        assert empty_cart.get_total_price() == 0
 
-    def test_cart_get_total_price_after_removing(self, product):
+    def test_cart_get_total_price_after_removing(self, cart_with_one_product, product):
         """Тест проверяет стоимость корзины, когда часть продуктов была удалена"""
-        pass
+        cart_with_one_product.remove_product(product, 1)
+        expected_price = product.price * cart_with_one_product.products[product]
+        assert cart_with_one_product.get_total_price() == expected_price
 
-    def test_cart_get_total_price_after_adding(self, product):
+    def test_cart_get_total_price_after_adding(self, cart_with_one_product, product):
         """Тест проверяет стоимость корзины, когда продукты были добавлены к уже добавленным"""
-        pass
+        cart_with_one_product.add_product(product, 2)
+        expected_price = product.price * cart_with_one_product.products[product]
+        assert cart_with_one_product.get_total_price() == expected_price
 
     def test_cart_buy_one_item(self, product):
         """Тест проверяет покупку одного продукта"""

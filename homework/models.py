@@ -72,7 +72,9 @@ class Cart:
         self.products.clear()
 
     def get_total_price(self) -> float:
-        raise NotImplementedError
+        total_price = sum([product.price * quantity
+                           for product, quantity in self.products.items()])
+        return total_price
 
     def buy(self):
         """
@@ -82,8 +84,3 @@ class Cart:
         """
         raise NotImplementedError
 
-
-if __name__ == '__main__':
-    book = Product("book", 100, "This is a book", 10)
-    assert book.check_quantity(10)
-    assert not book.check_quantity(11)
